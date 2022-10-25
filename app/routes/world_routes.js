@@ -33,7 +33,7 @@ const router = express.Router()
 // POST /examples
 router.post('/worlds', requireToken, (req, res, next) => {
 	// set owner of new example to be current user
-	req.body.pet.owner = req.user.id
+	req.body.world.owner = req.user.id
 
 	World.create(req.body.world)
 		// respond to succesful `create` with status 201 and JSON of new "example"
