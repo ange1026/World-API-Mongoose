@@ -37,7 +37,7 @@ router.post('/worlds', requireToken, (req, res, next) => {
 
 	World.create(req.body.world)
 		// respond to succesful `create` with status 201 and JSON of new "example"
-		.then(pet => {
+		.then(world => {
 			res.status(201).json({ world: world})
 		})
 		// if an error occurs, pass it off to our error handler
