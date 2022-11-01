@@ -19,7 +19,8 @@ const requireOwnership = customErrors.requireOwnership
 // this is middleware that will remove blank fields from `req.body`, e.g.
 // { example: { title: '', text: 'foo' } } -> { example: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
-const world = require('../models/world')
+const { restart } = require('nodemon')
+// const world = require('../models/world')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `req.user`
@@ -29,8 +30,32 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 
+// INDEX
+// GET /worlds
+router.get('/worlds', requireToken, (req, res, next) => {
+	World.find()
+		.then(worlds => {
+			return worlds.map(world => world)
+		})
+		.then(world => {
+			res.status(200).json({ worlds: worlds })
+		})
+		.catch(next)
+})
+
+// SHOW
+// GET /worlds/:id
+router.get('worlds/:id', requireToken, (req, res, next) => {
+	World.findById(req.params.id)
+	.then(handle404)
+	.then(world => {
+		res.status(200).json({ world: world })
+	})
+	.catch(next)
+})
+
 // CREATE
-// POST /examples
+// POST /worlds
 router.post('/worlds', requireToken, (req, res, next) => {
 	// set owner of new example to be current user
 	req.body.world.owner = req.user.id
@@ -44,6 +69,22 @@ router.post('/worlds', requireToken, (req, res, next) => {
 		// the error handler needs the error message and the `res` object so that it
 		// can send an error message back to the client
 		.catch(next)
+})
+
+// UPDATE
+// PATCH /worlds/:id
+router.patch('/worlds/:id', requireToken, removeBlanks, (req, res , next) => {
+	delete req.body.world.owner
+
+	World.findById(req.params.id)
+	.then(handle404)
+	.then(world => {
+		requireOwnership(req, world)
+
+		return world.updateOne(req.body.world)
+	})
+	.then(() => res.sendStatus(204))
+	.catch(next)
 })
 
 module.exports = router
