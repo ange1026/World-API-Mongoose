@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const worldSchema = new mongoose.Schema(
+const countrySchema = new mongoose.Schema(
 	{
 		country: {
 			type: String,
@@ -12,8 +12,7 @@ const worldSchema = new mongoose.Schema(
 		},
 		owner: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User',
-			required: true,
+			ref: 'User'
 		},
 	},
 	{
@@ -21,4 +20,4 @@ const worldSchema = new mongoose.Schema(
 	}
 )
 
-module.exports = mongoose.model('World', worldSchema)
+module.exports = mongoose.model('Country', countrySchema)

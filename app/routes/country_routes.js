@@ -4,7 +4,7 @@ const express = require('express')
 const passport = require('passport')
 
 // pull in Mongoose model for examples
-const World = require('../models/world')
+const Country = require('../models/country')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -31,39 +31,39 @@ const router = express.Router()
 
 
 // INDEX
-// GET /worlds
-router.get('/worlds', requireToken, (req, res, next) => {
-	World.find()
-		.then(worlds => {
-			return worlds.map(world => world)
+// GET /countries
+router.get('/countries', requireToken, (req, res, next) => {
+	Country.find()
+		.then(countries => {
+			return countries.map(country => country)
 		})
-		.then(world => {
-			res.status(200).json({ worlds: worlds })
+		.then(countries => {
+			res.status(200).json({ countries: countries })
 		})
 		.catch(next)
 })
 
 // SHOW
-// GET /worlds/:id
-router.get('worlds/:id', requireToken, (req, res, next) => {
-	World.findById(req.params.id)
+// GET /countries/:id
+router.get('countries/:id', requireToken, (req, res, next) => {
+	Country.findById(req.params.id)
 	.then(handle404)
-	.then(world => {
-		res.status(200).json({ world: world })
+	.then(country => {
+		res.status(200).json({ country: country })
 	})
 	.catch(next)
 })
 
 // CREATE
-// POST /worlds
-router.post('/worlds', requireToken, (req, res, next) => {
+// POST /countries
+router.post('/countries', requireToken, (req, res, next) => {
 	// set owner of new example to be current user
-	req.body.world.owner = req.user.id
+	req.body.country.owner = req.user.id
 
-	World.create(req.body.world)
+	Country.create(req.body.country)
 		// respond to succesful `create` with status 201 and JSON of new "example"
-		.then(world => {
-			res.status(201).json({ world: world})
+		.then(country => {
+			res.status(201).json({ country: country})
 		})
 		// if an error occurs, pass it off to our error handler
 		// the error handler needs the error message and the `res` object so that it
@@ -72,16 +72,16 @@ router.post('/worlds', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /worlds/:id
-router.patch('/worlds/:id', requireToken, removeBlanks, (req, res , next) => {
+// PATCH /countries/:id
+router.patch('/countries/:id', requireToken, removeBlanks, (req, res , next) => {
 	delete req.body.world.owner
 
-	World.findById(req.params.id)
+	Country.findById(req.params.id)
 	.then(handle404)
-	.then(world => {
-		requireOwnership(req, world)
+	.then(country => {
+		requireOwnership(req, country)
 
-		return world.updateOne(req.body.world)
+		return country.updateOne(req.body.country)
 	})
 	.then(() => res.sendStatus(204))
 	.catch(next)

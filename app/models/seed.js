@@ -5,16 +5,16 @@
 // we can modify this later, to only delete pets that don't have an owner already, but we'll keep it simple for now.
 
 const mongoose = require('mongoose')
-const World = require('./world')
+const World = require('./country')
 const db = require('../../config/db')
 
-const startPets = [
-    { contry: 'Nigeria', continent: 'Africa'},
-    { contry: 'Spain', continent: 'Europe'},
-    { contry: 'India', continent: 'Asia'},
-    { contry: 'United States', continent: 'North America'},
-    { contry: 'Australia', continent: 'Oceania'},
-    { contry: 'Brazil', continent: 'South America'}
+const startWorlds = [
+    { country: 'Nigeria', continent: 'Africa'},
+    { country: 'Spain', continent: 'Europe'},
+    { country: 'India', continent: 'Asia'},
+    { country: 'United States', continent: 'North America'},
+    { country: 'Australia', continent: 'Oceania'},
+    { country: 'Brazil', continent: 'South America'}
 ]
 
 // first we need to connect to the database
